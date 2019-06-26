@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class MapVC: UIViewController {
+class MapVC: UIViewController, UIGestureRecognizerDelegate {
 
     var locationManager = CLLocationManager()
     let authStatus = CLLocationManager.authorizationStatus()
@@ -22,6 +22,15 @@ class MapVC: UIViewController {
         pixelMapView.delegate = self
         locationManager.delegate = self
         configureLocationService()
+        addDoubleTap()
+    }
+    
+    func addDoubleTap() {
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(dropPin(sender:)))
+        doubleTap.delegate = self
+        doubleTap.numberOfTapsRequired = 2
+        pixelMapView.addGestureRecognizer(doubleTap)
+        
     }
 
     @IBAction func mapButtonPressed(_ sender: Any) {
@@ -38,6 +47,27 @@ extension MapVC: MKMapViewDelegate {
         let coordinateRegion = MKCoordinateRegion(center: coordinate, latitudinalMeters: regionRadius * 2.0, longitudinalMeters: regionRadius * 2.0)
         pixelMapView.setRegion(coordinateRegion, animated: true)
         
+    }
+    
+    @objc func dropPin(sender: UITapGestureRecognizer) {
+        removePin()
+        
+        let touchPoint = sender.location(in: pixelMapView)
+        let touchCoordinate = pixelMapView.convert(touchPoint, toCoordinateFrom: pixelMapView)
+        
+        let annotation = DroppablePin(coordinate: touchCoordinate, identifier: "droppable pin")
+        pixelMapView.addAnnotation(annotation)
+        
+        let coordinateRegion = MKCoordinateRegion.init(center: touchCoordinate, latitudinalMeters: regionRadius * 2.0, longitudinalMeters: regionRadius * 2.0)
+        
+        pixelMapView.setRegion(coordinateRegion, animated: true)
+        
+    }
+    
+    func removePin() {
+        for annotation in pixelMapView.annotations {
+            pixelMapView.removeAnnotation(annotation)
+        }
     }
 }
 
