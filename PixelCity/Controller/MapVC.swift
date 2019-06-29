@@ -16,13 +16,26 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     let authStatus = CLLocationManager.authorizationStatus()
     let regionRadius: Double = 1000
     
+    // Outlets
     @IBOutlet weak var pixelMapView: MKMapView!
+    @IBOutlet weak var galleryView: UIView!
+    @IBOutlet weak var mapViewBottom: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         pixelMapView.delegate = self
         locationManager.delegate = self
         configureLocationService()
         addDoubleTap()
+    }
+    
+    func animateViewUp() {
+        mapViewBottom.constant = 300
+        // animate the view
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+        
     }
     
     func addDoubleTap() {
@@ -42,6 +55,17 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
 }
 
 extension MapVC: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation {
+            return nil
+        }
+        let pinAnnotation = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "droppablePin")
+        pinAnnotation.pinTintColor = #colorLiteral(red: 0.6039215686, green: 0.1960784314, blue: 0.8039215686, alpha: 1)
+        pinAnnotation.animatesDrop = true
+        
+        return pinAnnotation
+    }
+    
     func centerMapOnUserLocation() {
         guard let coordinate = locationManager.location?.coordinate else { return }
         let coordinateRegion = MKCoordinateRegion(center: coordinate, latitudinalMeters: regionRadius * 2.0, longitudinalMeters: regionRadius * 2.0)
@@ -50,6 +74,7 @@ extension MapVC: MKMapViewDelegate {
     }
     
     @objc func dropPin(sender: UITapGestureRecognizer) {
+        pixelMapView.showsUserLocation = false
         removePin()
         
         let touchPoint = sender.location(in: pixelMapView)
@@ -61,6 +86,7 @@ extension MapVC: MKMapViewDelegate {
         let coordinateRegion = MKCoordinateRegion.init(center: touchCoordinate, latitudinalMeters: regionRadius * 2.0, longitudinalMeters: regionRadius * 2.0)
         
         pixelMapView.setRegion(coordinateRegion, animated: true)
+        animateViewUp()
         
     }
     

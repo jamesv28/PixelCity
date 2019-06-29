@@ -48,31 +48,33 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="95g-zf-xpe">
-                                <rect key="frame" x="0.0" y="896" width="414" height="0.0"/>
+                                <rect key="frame" x="0.0" y="895" width="414" height="1"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" id="e6T-XG-hdc"/>
+                                    <constraint firstAttribute="height" constant="1" id="T9f-UV-hby"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="ZDH-0M-LSI" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="4Bx-Qw-nw9"/>
-                            <constraint firstItem="95g-zf-xpe" firstAttribute="top" secondItem="ZDH-0M-LSI" secondAttribute="bottom" id="6ye-N8-XAh"/>
+                            <constraint firstItem="95g-zf-xpe" firstAttribute="bottom" secondItem="ZDH-0M-LSI" secondAttribute="bottom" id="6Ob-4X-CBu"/>
                             <constraint firstItem="VGl-mb-Zv9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8sH-St-8RQ"/>
                             <constraint firstAttribute="trailing" secondItem="95g-zf-xpe" secondAttribute="trailing" id="CQ7-vi-4cR"/>
+                            <constraint firstItem="ZDH-0M-LSI" firstAttribute="bottom" secondItem="WqH-HR-gbj" secondAttribute="bottom" constant="74" id="DI4-QU-v6I"/>
+                            <constraint firstAttribute="bottom" secondItem="95g-zf-xpe" secondAttribute="bottom" id="Dvh-Ev-be7"/>
                             <constraint firstItem="95g-zf-xpe" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="SzX-wb-FaL"/>
-                            <constraint firstAttribute="bottom" secondItem="95g-zf-xpe" secondAttribute="bottom" id="Vhn-SK-iS0"/>
                             <constraint firstAttribute="trailing" secondItem="VGl-mb-Zv9" secondAttribute="trailing" id="ZRy-Uf-53O"/>
                             <constraint firstItem="VGl-mb-Zv9" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="a4Y-ke-jis"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="WqH-HR-gbj" secondAttribute="trailing" constant="40" id="d8P-9F-UKy"/>
                             <constraint firstItem="ZDH-0M-LSI" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="lQZ-0M-xFh"/>
                             <constraint firstItem="ZDH-0M-LSI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="pIa-Wt-njY"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="WqH-HR-gbj" secondAttribute="bottom" constant="40" id="vOS-ds-ZOt"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="galleryView" destination="95g-zf-xpe" id="NUQ-Lu-2Om"/>
+                        <outlet property="mapViewBottom" destination="DI4-QU-v6I" id="wPB-SO-OOp"/>
                         <outlet property="pixelMapView" destination="ZDH-0M-LSI" id="22y-QV-Ali"/>
                     </connections>
                 </viewController>
