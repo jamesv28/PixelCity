@@ -41,7 +41,11 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WqH-HR-gbj">
-                                <rect key="frame" x="307" y="755" width="67" height="67"/>
+                                <rect key="frame" x="307" y="778" width="67" height="67"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="67" id="F6h-kj-FDG"/>
+                                    <constraint firstAttribute="height" constant="67" id="bVP-Zu-HRj"/>
+                                </constraints>
                                 <state key="normal" image="locationButton"/>
                                 <connections>
                                     <action selector="mapButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="205-fJ-59N"/>
@@ -61,8 +65,8 @@
                             <constraint firstItem="95g-zf-xpe" firstAttribute="bottom" secondItem="ZDH-0M-LSI" secondAttribute="bottom" id="6Ob-4X-CBu"/>
                             <constraint firstItem="VGl-mb-Zv9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8sH-St-8RQ"/>
                             <constraint firstAttribute="trailing" secondItem="95g-zf-xpe" secondAttribute="trailing" id="CQ7-vi-4cR"/>
-                            <constraint firstItem="ZDH-0M-LSI" firstAttribute="bottom" secondItem="WqH-HR-gbj" secondAttribute="bottom" constant="74" id="DI4-QU-v6I"/>
                             <constraint firstAttribute="bottom" secondItem="95g-zf-xpe" secondAttribute="bottom" id="Dvh-Ev-be7"/>
+                            <constraint firstItem="WqH-HR-gbj" firstAttribute="bottom" secondItem="95g-zf-xpe" secondAttribute="top" constant="-50" id="Hol-4h-htw"/>
                             <constraint firstItem="95g-zf-xpe" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="SzX-wb-FaL"/>
                             <constraint firstAttribute="trailing" secondItem="VGl-mb-Zv9" secondAttribute="trailing" id="ZRy-Uf-53O"/>
                             <constraint firstItem="VGl-mb-Zv9" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="a4Y-ke-jis"/>
@@ -74,7 +78,7 @@
                     </view>
                     <connections>
                         <outlet property="galleryView" destination="95g-zf-xpe" id="NUQ-Lu-2Om"/>
-                        <outlet property="mapViewBottom" destination="DI4-QU-v6I" id="wPB-SO-OOp"/>
+                        <outlet property="galleryViewHeightConstraint" destination="T9f-UV-hby" id="6br-hU-AAn"/>
                         <outlet property="pixelMapView" destination="ZDH-0M-LSI" id="22y-QV-Ali"/>
                     </connections>
                 </viewController>

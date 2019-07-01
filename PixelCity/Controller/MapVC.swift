@@ -15,11 +15,14 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     var locationManager = CLLocationManager()
     let authStatus = CLLocationManager.authorizationStatus()
     let regionRadius: Double = 1000
+    var spinner: UIActivityIndicatorView?
+    var progressLabel: UILabel?
+    var screensize = UIScreen.main.bounds
     
     // Outlets
     @IBOutlet weak var pixelMapView: MKMapView!
     @IBOutlet weak var galleryView: UIView!
-    @IBOutlet weak var mapViewBottom: NSLayoutConstraint!
+    @IBOutlet weak var galleryViewHeightConstraint: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,11 +33,34 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func animateViewUp() {
-        mapViewBottom.constant = 300
+        galleryViewHeightConstraint.constant = 240
         // animate the view
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
+        
+    }
+    
+    func addSwipeDown() {
+        let swipe = UISwipeGestureRecognizer(target: self, action: #selector(swipeDown))
+        swipe.direction = .down
+        galleryView.addGestureRecognizer(swipe)
+    }
+    
+    @objc func swipeDown() {
+        galleryViewHeightConstraint.constant = 0
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    func addSpinner() {
+        spinner = UIActivityIndicatorView()
+        spinner?.center = CGPoint(x: (screensize.width / 2) - ((spinner?.frame.width)! / 2), y: 130)
+        spinner?.style = .whiteLarge
+        spinner?.color = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
+        spinner?.startAnimating()
+        galleryView.addSubview(spinner!)
         
     }
     
@@ -76,6 +102,10 @@ extension MapVC: MKMapViewDelegate {
     @objc func dropPin(sender: UITapGestureRecognizer) {
         pixelMapView.showsUserLocation = false
         removePin()
+        animateViewUp()
+        addSwipeDown()
+        addSpinner()
+        
         
         let touchPoint = sender.location(in: pixelMapView)
         let touchCoordinate = pixelMapView.convert(touchPoint, toCoordinateFrom: pixelMapView)
@@ -86,7 +116,6 @@ extension MapVC: MKMapViewDelegate {
         let coordinateRegion = MKCoordinateRegion.init(center: touchCoordinate, latitudinalMeters: regionRadius * 2.0, longitudinalMeters: regionRadius * 2.0)
         
         pixelMapView.setRegion(coordinateRegion, animated: true)
-        animateViewUp()
         
     }
     
