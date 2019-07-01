@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  PixelCity
-//
-//  Created by James Volmert on 6/24/19.
-//  Copyright © 2019 James Volmert. All rights reserved.
-//
-
 import UIKit
 import MapKit
 import CoreLocation
@@ -19,6 +11,11 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     var progressLabel: UILabel?
     var screensize = UIScreen.main.bounds
     
+    // progromatically add collection view
+    var flowLayout = UICollectionViewFlowLayout()
+    var photoCollectionView: UICollectionView?
+    
+    
     // Outlets
     @IBOutlet weak var pixelMapView: MKMapView!
     @IBOutlet weak var galleryView: UIView!
@@ -30,6 +27,15 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         locationManager.delegate = self
         configureLocationService()
         addDoubleTap()
+        
+        photoCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
+        photoCollectionView?.register(PhotoCell.self, forCellWithReuseIdentifier: "photoCell")
+        photoCollectionView?.delegate = self
+        photoCollectionView?.dataSource = self
+        photoCollectionView?.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
+        
+        galleryView.addSubview(photoCollectionView!)
+        
     }
     
     func animateViewUp() {
@@ -60,8 +66,29 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         spinner?.style = .whiteLarge
         spinner?.color = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
         spinner?.startAnimating()
-        galleryView.addSubview(spinner!)
+        photoCollectionView?.addSubview(spinner!)
         
+    }
+    
+    func removeSpinner() {
+        if spinner != nil {
+            spinner?.removeFromSuperview()
+        }
+    }
+    func addProgressLabel() {
+        progressLabel = UILabel()
+        progressLabel?.frame = CGRect(x: (screensize.width / 2) - 200, y: 160, width: 300, height: 40)
+        progressLabel?.font = UIFont(name: "Avenir Next", size: 18)
+        progressLabel?.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
+        progressLabel?.textAlignment = .center
+        progressLabel?.text = "Showing 12 of 20 photos"
+        photoCollectionView?.addSubview(progressLabel!)
+    }
+    
+    func removeProgressLabel() {
+        if progressLabel != nil {
+            progressLabel?.removeFromSuperview()
+        }
     }
     
     func addDoubleTap() {
@@ -102,9 +129,12 @@ extension MapVC: MKMapViewDelegate {
     @objc func dropPin(sender: UITapGestureRecognizer) {
         pixelMapView.showsUserLocation = false
         removePin()
+        removeSpinner()
+        removeProgressLabel()
         animateViewUp()
         addSwipeDown()
         addSpinner()
+        addProgressLabel()
         
         
         let touchPoint = sender.location(in: pixelMapView)
@@ -140,5 +170,22 @@ extension MapVC: CLLocationManagerDelegate {
         centerMapOnUserLocation()
     }
     
+    
+}
+
+extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        //number of items in array
+        return 4
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = photoCollectionView?.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as? PhotoCell
+        return cell!
+    }
     
 }
