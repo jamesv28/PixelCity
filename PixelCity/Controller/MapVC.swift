@@ -1,6 +1,8 @@
 import UIKit
 import MapKit
 import CoreLocation
+import Alamofire
+import AlamofireImage
 
 class MapVC: UIViewController, UIGestureRecognizerDelegate {
 
@@ -10,6 +12,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     var spinner: UIActivityIndicatorView?
     var progressLabel: UILabel?
     var screensize = UIScreen.main.bounds
+    var imageUrls = [String]()
     
     // progromatically add collection view
     var flowLayout = UICollectionViewFlowLayout()
@@ -104,6 +107,13 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    func retrieveUrls(forAnnotation annotation: DroppablePin, handler: @escaping (_ status: Bool) -> () ) {
+        imageUrls = []
+        Alamofire.request(flickrUrl(forApiKey: API_KEY, withAnnotation: annotation, addNumberOfPhotos: 40)).responseJSON { (response) in
+            print(response)
+            handler(true)
+        }
+    }
 }
 
 extension MapVC: MKMapViewDelegate {
@@ -142,11 +152,13 @@ extension MapVC: MKMapViewDelegate {
         let annotation = DroppablePin(coordinate: touchCoordinate, identifier: "droppable pin")
         pixelMapView.addAnnotation(annotation)
         
-        print(flickrUrl(forApiKey: API_KEY, withAnnotation: annotation, addNumberOfPhotos: 40))
         let coordinateRegion = MKCoordinateRegion.init(center: touchCoordinate, latitudinalMeters: regionRadius * 2.0, longitudinalMeters: regionRadius * 2.0)
         
         pixelMapView.setRegion(coordinateRegion, animated: true)
         
+        retrieveUrls(forAnnotation: annotation) { (Bool) in
+            
+        }
     }
     
     func removePin() {
