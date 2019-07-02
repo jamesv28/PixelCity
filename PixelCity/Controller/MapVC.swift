@@ -110,7 +110,13 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     func retrieveUrls(forAnnotation annotation: DroppablePin, handler: @escaping (_ status: Bool) -> () ) {
         imageUrls = []
         Alamofire.request(flickrUrl(forApiKey: API_KEY, withAnnotation: annotation, addNumberOfPhotos: 40)).responseJSON { (response) in
-            print(response)
+            guard let json = response.result.value as? Dictionary<String, AnyObject> else { return }
+            let photosDict = json["photos"] as! Dictionary<String, AnyObject>
+            let photosDictArray = photosDict["photo"] as! [Dictionary<String, AnyObject>]
+            for photo in photosDictArray {
+                let postUrl = "https://farm\(photo["farm"]!).staticflickr.com/\(photo["server"]!)/\(photo["id"]!)_\(photo["secret"]!).jpg"
+                self.imageUrls.append(postUrl)
+            }
             handler(true)
         }
     }
@@ -157,7 +163,7 @@ extension MapVC: MKMapViewDelegate {
         pixelMapView.setRegion(coordinateRegion, animated: true)
         
         retrieveUrls(forAnnotation: annotation) { (Bool) in
-            
+            print(self.imageUrls)
         }
     }
     
