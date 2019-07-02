@@ -81,7 +81,6 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         progressLabel?.font = UIFont(name: "Avenir Next", size: 18)
         progressLabel?.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
         progressLabel?.textAlignment = .center
-        progressLabel?.text = "Showing 12 of 20 photos"
         photoCollectionView?.addSubview(progressLabel!)
     }
     
@@ -143,6 +142,7 @@ extension MapVC: MKMapViewDelegate {
         let annotation = DroppablePin(coordinate: touchCoordinate, identifier: "droppable pin")
         pixelMapView.addAnnotation(annotation)
         
+        print(flickrUrl(forApiKey: API_KEY, withAnnotation: annotation, addNumberOfPhotos: 40))
         let coordinateRegion = MKCoordinateRegion.init(center: touchCoordinate, latitudinalMeters: regionRadius * 2.0, longitudinalMeters: regionRadius * 2.0)
         
         pixelMapView.setRegion(coordinateRegion, animated: true)
