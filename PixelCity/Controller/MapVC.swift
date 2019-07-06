@@ -3,6 +3,7 @@ import MapKit
 import CoreLocation
 import Alamofire
 import AlamofireImage
+import MapKitGoogleStyler
 
 class MapVC: UIViewController, UIGestureRecognizerDelegate {
 
@@ -13,7 +14,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     var progressLabel: UILabel?
     var screensize = UIScreen.main.bounds
     var imageUrls = [String]()
-    
+    var imageArray = [UIImage]()
     // progromatically add collection view
     var flowLayout = UICollectionViewFlowLayout()
     var photoCollectionView: UICollectionView?
@@ -38,8 +39,26 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         photoCollectionView?.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
         
         galleryView.addSubview(photoCollectionView!)
+        configureTileOverlay()
         
     }
+    
+    private func configureTileOverlay() {
+        // We first need to have the path of the overlay configuration JSON
+        guard let overlayFileURLString = Bundle.main.path(forResource: "MapStyle", ofType: "json") else {
+            return
+        }
+        let overlayFileURL = URL(fileURLWithPath: overlayFileURLString)
+        // After that, you can create the tile overlay using MapKitGoogleStyler
+        guard let tileOverlay = try? MapKitGoogleStyler.buildOverlay(with: overlayFileURL) else {
+            return
+        }
+        
+        // And finally add it to your MKMapView
+        pixelMapView.addOverlay(tileOverlay)
+    }
+    
+
     
     func animateViewUp() {
         galleryViewHeightConstraint.constant = 240
@@ -120,6 +139,22 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
             handler(true)
         }
     }
+    
+    func retrieveImages(handler: @escaping (_ status: Bool) -> ( )) {
+        imageArray = []
+        for url in imageUrls {
+            Alamofire.request(url).responseImage(completionHandler: { (response) in
+                guard let image = response.result.value else { return }
+                self.imageArray.append(image)
+                self.progressLabel?.text = "\(self.imageArray.count) IMAGES DOWNLOADED"
+                
+                if self.imageArray.count == self.imageUrls.count {
+                    handler(true)
+                    
+                }
+            })
+        }
+    }
 }
 
 extension MapVC: MKMapViewDelegate {
@@ -162,14 +197,31 @@ extension MapVC: MKMapViewDelegate {
         
         pixelMapView.setRegion(coordinateRegion, animated: true)
         
-        retrieveUrls(forAnnotation: annotation) { (Bool) in
-            print(self.imageUrls)
+        retrieveUrls(forAnnotation: annotation) { (finished) in
+            if finished {
+                self.retrieveImages(handler: { (finished) in
+                    self.removeSpinner()
+                    self.removeProgressLabel()
+                    
+                })
+            }
         }
     }
     
     func removePin() {
         for annotation in pixelMapView.annotations {
             pixelMapView.removeAnnotation(annotation)
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        // This is the final step. This code can be copied and pasted into your project
+        // without thinking on it so much. It simply instantiates a MKTileOverlayRenderer
+        // for displaying the tile overlay.
+        if let tileOverlay = overlay as? MKTileOverlay {
+            return MKTileOverlayRenderer(tileOverlay: tileOverlay)
+        } else {
+            return MKOverlayRenderer(overlay: overlay)
         }
     }
 }
@@ -207,3 +259,4 @@ extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
 }
+
