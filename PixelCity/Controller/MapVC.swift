@@ -9,7 +9,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
 
     var locationManager = CLLocationManager()
     let authStatus = CLLocationManager.authorizationStatus()
-    let regionRadius: Double = 1000
+    let regionRadius: Double = 800
     var spinner: UIActivityIndicatorView?
     var progressLabel: UILabel?
     var screensize = UIScreen.main.bounds
@@ -100,7 +100,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     func addProgressLabel() {
         progressLabel = UILabel()
         progressLabel?.frame = CGRect(x: (screensize.width / 2) - 200, y: 160, width: 300, height: 40)
-        progressLabel?.font = UIFont(name: "Avenir Next", size: 18)
+        progressLabel?.font = UIFont(name: "Avenir Next", size: 14)
         progressLabel?.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
         progressLabel?.textAlignment = .center
         photoCollectionView?.addSubview(progressLabel!)
@@ -153,6 +153,12 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
                     
                 }
             })
+        }
+    }
+    
+    func cancelAllSessions() {
+        Alamofire.SessionManager.default.session.getTasksWithCompletionHandler { (sessionDataTask, uploadData, downloadData) in
+            // code goes here
         }
     }
 }
