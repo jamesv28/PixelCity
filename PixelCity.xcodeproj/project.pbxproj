@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		137405913D84E1EFEC1B78B0 /* Pods_PixelCity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F845581E21E3911E4631D6AA /* Pods_PixelCity.framework */; };
+		AA16446122D3E07800152D17 /* PopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA16446022D3E07800152D17 /* PopVC.swift */; };
 		AA45EC4222CACFF0001ED8ED /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA45EC4122CACFF0001ED8ED /* PhotoCell.swift */; };
 		AA45EC4422CAD850001ED8ED /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA45EC4322CAD850001ED8ED /* Constants.swift */; };
 		AA91677E22D12D9700DB0063 /* MapStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = AA91677D22D12D9700DB0063 /* MapStyle.json */; };
@@ -22,6 +23,7 @@
 /* Begin PBXFileReference section */
 		26E9F69CC9C8D89784979A79 /* Pods-PixelCity.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelCity.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PixelCity/Pods-PixelCity.debug.xcconfig"; sourceTree = "<group>"; };
 		76685B65642A2D7F8A902C76 /* Pods-PixelCity.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelCity.release.xcconfig"; path = "Pods/Target Support Files/Pods-PixelCity/Pods-PixelCity.release.xcconfig"; sourceTree = "<group>"; };
+		AA16446022D3E07800152D17 /* PopVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopVC.swift; sourceTree = "<group>"; };
 		AA45EC4122CACFF0001ED8ED /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		AA45EC4322CAD850001ED8ED /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		AA91677D22D12D9700DB0063 /* MapStyle.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = MapStyle.json; path = PixelCity/MapStyle.json; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				AAB58B5922C1A16C005733E3 /* MapVC.swift */,
+				AA16446022D3E07800152D17 /* PopVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA16446122D3E07800152D17 /* PopVC.swift in Sources */,
 				AA45EC4422CAD850001ED8ED /* Constants.swift in Sources */,
 				AA45EC4222CACFF0001ED8ED /* PhotoCell.swift in Sources */,
 				AAB58B5A22C1A16C005733E3 /* MapVC.swift in Sources */,
