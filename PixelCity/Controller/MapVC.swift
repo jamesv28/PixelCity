@@ -9,7 +9,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
 
     var locationManager = CLLocationManager()
     let authStatus = CLLocationManager.authorizationStatus()
-    let regionRadius: Double = 800
+    let regionRadius: Double = 600
     var spinner: UIActivityIndicatorView?
     var progressLabel: UILabel?
     var screensize = UIScreen.main.bounds
@@ -36,7 +36,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         photoCollectionView?.register(PhotoCell.self, forCellWithReuseIdentifier: "photoCell")
         photoCollectionView?.delegate = self
         photoCollectionView?.dataSource = self
-        photoCollectionView?.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
+        photoCollectionView?.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         galleryView.addSubview(photoCollectionView!)
         configureTileOverlay()
@@ -80,6 +80,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
+        cancelAllSessions()
     }
     
     func addSpinner() {
@@ -127,7 +128,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func retrieveUrls(forAnnotation annotation: DroppablePin, handler: @escaping (_ status: Bool) -> () ) {
-        imageUrls = []
+        
         Alamofire.request(flickrUrl(forApiKey: API_KEY, withAnnotation: annotation, addNumberOfPhotos: 40)).responseJSON { (response) in
             guard let json = response.result.value as? Dictionary<String, AnyObject> else { return }
             let photosDict = json["photos"] as! Dictionary<String, AnyObject>
@@ -141,7 +142,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func retrieveImages(handler: @escaping (_ status: Bool) -> ( )) {
-        imageArray = []
+        
         for url in imageUrls {
             Alamofire.request(url).responseImage(completionHandler: { (response) in
                 guard let image = response.result.value else { return }
@@ -159,6 +160,8 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     func cancelAllSessions() {
         Alamofire.SessionManager.default.session.getTasksWithCompletionHandler { (sessionDataTask, uploadData, downloadData) in
             // code goes here
+            sessionDataTask.forEach({$0.cancel() })
+            downloadData.forEach({$0.cancel() })
         }
     }
 }
@@ -187,6 +190,12 @@ extension MapVC: MKMapViewDelegate {
         removePin()
         removeSpinner()
         removeProgressLabel()
+        cancelAllSessions()
+        
+        imageUrls = []
+        imageArray = []
+        photoCollectionView?.reloadData()
+        
         animateViewUp()
         addSwipeDown()
         addSpinner()
@@ -208,7 +217,7 @@ extension MapVC: MKMapViewDelegate {
                 self.retrieveImages(handler: { (finished) in
                     self.removeSpinner()
                     self.removeProgressLabel()
-                    
+                    self.photoCollectionView?.reloadData()
                 })
             }
         }
@@ -255,13 +264,16 @@ extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //number of items in array
-        return 4
+        return imageArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = photoCollectionView?.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as? PhotoCell
-        return cell!
+        guard let cell = photoCollectionView?.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as? PhotoCell else { return UICollectionViewCell() }
+        // think about imageFromIndex as a for loop
+        let imageFromIndex = imageArray[indexPath.row]
+        let imageView = UIImageView(image: imageFromIndex)
+        cell.addSubview(imageView)
+        return cell
     }
     
 }
